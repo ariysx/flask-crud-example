@@ -23,7 +23,7 @@ def add():
   cur.execute(s)
   mysql.connection.commit()
 
-  return '{"Result":"Success"}' # Really? maybe we should check!
+  return '{"Result":"Success"}' # uhm
 
 @app.route("/hello") #Add Student
 def hello():
