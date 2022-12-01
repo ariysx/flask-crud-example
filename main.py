@@ -25,6 +25,44 @@ def add():
 
   return '{"Result":"Success"}' # uhm
 
+@app.route("/remove")
+def remove():
+  id = request.args.get('id')
+  cur = mysql.connection.cursor()
+  s='''DELETE FROM students WHERE studentID = {}'''.format(id)
+  cur.execute(s)
+  mysql.connection.commit()
+
+  return '{"Result":"Success"}' # uhm
+
+@app.route("/update")
+def update():
+  id = request.args.get('id')
+  name = request.args.get('name')
+  email = request.args.get('email')
+  cur = mysql.connection.cursor()
+  s='''UPDATE students SET studentName='{}', email='{}' WHERE studentID = {}'''.format(name, email, id)
+  cur.execute(s)
+  mysql.connection.commit()
+
+  return '{"Result":"Success"}' # uhm
+
+@app.route("/view")
+def view():
+  cur = mysql.connection.cursor()  # create a connection to the SQL instance
+  cur.execute('''SELECT * FROM students''')  # execute an SQL statment
+  rv = cur.fetchall()  # Retreive all rows returend by the SQL statment
+  Results = []
+  strHTML = ""
+  for row in rv:  # Format the Output Results and add to return string
+    Result = {}
+    Result['Name'] = row[0].replace('\n', ' ')
+    Result['Email'] = row[1]
+    Result['ID'] = row[2]
+    Results.append(Result)
+    strHTML += "<tr><td>"+str(row[2])+"</td><td>"+str(row[0])+"</td><td>"+str(row[1])+"</td></tr>"
+  return "<table style=\"border: 2px solid #abc5f9; margin: auto; padding: 2rem;\"><tr><th>ID</th><th>Name</th><th>Email</th></tr>" + strHTML + "</table>"
+
 @app.route("/hello") #Add Student
 def hello():
   return '{"Result":"Success"}' # Really? maybe we should check!  
